@@ -1,0 +1,46 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    maven {
+        url "http://hub.spigotmc.org/nexus/content/repositories/snapshots"
+    }
+}
+
+dependencies {
+	compileOnly group: 'org.bukkit', name: 'bukkit', version: '1.12.2-R0.1-SNAPSHOT'
+	compile group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.9.3'
+	testCompile group: 'junit', name: 'junit', version: '4.4'
+}
+
+jar { 
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+apply plugin: 'eclipse'
+
+eclipse {	 
+  classpath {
+	downloadSources = true // default: true
+	downloadJavadoc = true // default: false
+  }
+} 
+
+def eclipseSourceFolders=[
+	'src/main/java',
+	'src/main/resources',
+	'src/test/java',
+	'src/test/resources'
+];
+
+tasks.eclipse.dependsOn << {
+		
+	for (String sourceFolder: eclipseSourceFolders){ 
+		def resourceDir = new File(project.projectDir, sourceFolder)
+		if( !resourceDir.exists() && ! resourceDir.mkdirs() ) {
+    		logger.info("Not able to create %1",resourceDir);
+    	}
+	}
+}

@@ -1,0 +1,3 @@
+name: PlayerLoginPlugin
+main: pl.sebcel.minecraft.playerlogin.PlayerLoginPlugin
+version: 1.0.0
